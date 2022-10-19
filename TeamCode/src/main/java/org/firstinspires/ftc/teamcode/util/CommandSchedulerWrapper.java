@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.util;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.button.Button;
+
+import org.firstinspires.ftc.teamcode.util.BooleanButton;
 
 import java.util.function.BooleanSupplier;
 
