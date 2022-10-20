@@ -19,7 +19,7 @@ public class position1 extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
-        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(35, -62, Math.toRadians(90)))
+        drive.followTrajectory(drive.trajectoryBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60))
                 .splineToConstantHeading(new Vector2d(13, -47), Math.toRadians(90))
                 .splineTo(new Vector2d(8, -32), Math.toRadians(135))
