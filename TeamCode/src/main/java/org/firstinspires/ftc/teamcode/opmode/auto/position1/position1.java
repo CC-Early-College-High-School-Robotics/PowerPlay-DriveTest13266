@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 @Autonomous
 public class position1 extends LinearOpMode {
-    Pose2d startPose = new Pose2d(12, 63.2, Math.toRadians(-90));
+    Pose2d startPose = new Pose2d(35, -62, Math.toRadians(90));
     @Override
     public void runOpMode() throws InterruptedException {
         // Initalize Subsystems
