@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.opmode.auto.position1;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
+@Autonomous
 public class position1 extends LinearOpMode {
     Pose2d startPose = new Pose2d(12, 63.2, Math.toRadians(-90));
     @Override
