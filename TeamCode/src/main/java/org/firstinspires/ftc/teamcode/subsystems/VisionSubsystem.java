@@ -45,7 +45,7 @@ public class VisionSubsystem extends HardwareSubsystem {
     }
 
     @Override
-    public void init() {
+    public void  init() {
         // TODO: we might want to do this
         //  telemetry.setMsTransmissionInterval(50);
 
