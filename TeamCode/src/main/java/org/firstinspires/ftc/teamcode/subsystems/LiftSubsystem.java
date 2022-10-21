@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.constants.Constants.LiftMotorConstants;
-import static org.firstinspires.ftc.teamcode.constants.Constants.LiftServoConstants;
+import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftMotorConstants;
+import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftServoConstants;
 
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -17,6 +17,75 @@ public class LiftSubsystem extends HardwareSubsystem {
     ServoEx rightLiftServo;
     double motorPosition;
     double servoPosition;
+
+    public static class LiftMotorConstants {
+        public static Hardware hardware = new Hardware();
+        public static Controller controller = new Controller();
+        public static Position position = new Position();
+        public static Speed speed = new Speed();
+
+        public static class Hardware {
+            public String LEFT_ID = "leftLiftMotor";
+            public String RIGHT_ID = "rightLiftMotor";
+            public boolean LEFT_REVERSED = true;
+            public boolean RIGHT_REVERSED = false;
+            public double
+                    RPM           = 435,
+                    CPR           = 384.539792388;
+        }
+
+        public static class Controller {
+            public double
+                    TOLERANCE     = 8,
+                    POSITION_TOLERANCE = 8,
+                    KP            = 4,
+                    kI            = 0,
+                    kD            = 0,
+                    kF            = 0;
+        }
+        public static class Position {
+            public double
+                    TALL = 955, // Degrees
+                    MIDDLE = 330, // Degrees
+                    LOWER = 0, // Degrees
+                    INITIAL = 0,
+                    MAX_POSITION = 1210,
+                    MIN_POSITION = 0;
+        }
+        public static class Speed {
+            public double
+                    NORMAL_SPEED         = 1,
+                    SPEED_DEGREES_CHANGE          = 5;
+
+        }
+    }
+
+    public static class LiftServoConstants {
+        public static Hardware hardware = new Hardware();
+        public static Position position = new Position();
+        public static Speed speed = new Speed();
+
+        public static class Hardware {
+            public String LEFT_ID            = "leftLiftServo";
+            public String RIGHT_ID            = "rightLiftServo";
+            public boolean LEFT_REVERSED     = false;
+            public boolean RIGHT_REVERSED     = true;
+        }
+
+        public static class Position {
+            public double
+                    HIGH          = 209, // Degrees
+                    MID           = 209, // Degrees
+                    LOW           = 142, // Degrees
+                    INITIAL = 10,
+                    RIGHT_SERVO_OFFSET = 0;
+        }
+        public static class Speed {
+            public double
+                    SPEED_DEGREES_CHANGE          = 0.4;
+
+        }
+    }
 
     public LiftSubsystem(OpMode opMode) {
         super(opMode);
@@ -60,34 +129,6 @@ public class LiftSubsystem extends HardwareSubsystem {
     public void low() {
         motorPosition = LiftMotorConstants.position.LOWER;
         servoPosition = LiftServoConstants.position.LOW;
-        turnToPositions();
-    }
-
-    public void sharedHigh() {
-        motorPosition = LiftMotorConstants.position.SHARED_HIGH;
-        servoPosition = LiftServoConstants.position.SHARED_HIGH;
-        turnToPositions();
-    }
-
-    public void sharedLow() {
-        motorPosition = LiftMotorConstants.position.SHARED_LOW;
-        servoPosition = LiftServoConstants.position.SHARED_LOW;
-        turnToPositions();
-    }
-
-    public void capHigh() {
-        motorPosition = LiftMotorConstants.position.CAP_HIGH;
-        servoPosition = LiftServoConstants.position.CAP_HIGH;
-        turnToPositions();
-    }
-    public void capLow() {
-        motorPosition = LiftMotorConstants.position.CAP_LOW;
-        servoPosition = LiftServoConstants.position.CAP_LOW;
-        turnToPositions();
-    }
-    public void capPickUp() {
-        motorPosition = LiftMotorConstants.position.CAP_PICKUP;
-        servoPosition = LiftServoConstants.position.CAP_PICKUP;
         turnToPositions();
     }
 
@@ -157,8 +198,8 @@ public class LiftSubsystem extends HardwareSubsystem {
         rightLiftServo.turnToAngle(servoPosition + LiftServoConstants.position.RIGHT_SERVO_OFFSET);
         setMotorAngle(motorPosition);
 
-        leftLiftMotor.setPower(LiftMotorConstants.speed.INITIAL_SPEED);
-        rightLiftMotor.setPower(LiftMotorConstants.speed.INITIAL_SPEED);
+        leftLiftMotor.setPower(LiftMotorConstants.speed.NORMAL_SPEED);
+        rightLiftMotor.setPower(LiftMotorConstants.speed.NORMAL_SPEED);
     }
 
     @Override
