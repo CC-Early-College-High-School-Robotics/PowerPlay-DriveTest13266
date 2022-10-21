@@ -69,6 +69,7 @@ public class RightSide extends LinearOpMode {
 
         if (isStopRequested()) return;
         drive.followTrajectorySequence(preLoad);
+        if (forwardDistance == 0) return;
         drive.followTrajectorySequence(forward);
     }
 }
