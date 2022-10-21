@@ -13,8 +13,6 @@ public class HardwareSubsystem extends SubsystemBase {
         telemetry = opMode.telemetry;
         hardwareMap = opMode.hardwareMap;
     }
-    protected HardwareSubsystem() {
-    }
 
     public void periodic() {
     }
