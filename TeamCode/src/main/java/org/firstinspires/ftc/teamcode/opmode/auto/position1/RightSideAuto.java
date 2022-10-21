@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class RightSideAuto extends LinearOpMode {
@@ -21,6 +22,7 @@ public class RightSideAuto extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
+
         drive.followTrajectory(drive.trajectoryBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60))
                 .lineToLinearHeading(new Pose2d(8, -32, Math.toRadians(315)))

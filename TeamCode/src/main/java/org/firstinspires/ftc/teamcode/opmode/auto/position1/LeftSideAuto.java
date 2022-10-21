@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 @Autonomous
 public class LeftSideAuto extends LinearOpMode {
-    Pose2d startPose = new Pose2d(35, -62, Math.toRadians(90));
+    Pose2d startPose = new Pose2d(-35, -62, Math.toRadians(-90));
     @Override
     public void runOpMode() throws InterruptedException {
         // Initalize Subsystems
@@ -21,19 +21,12 @@ public class LeftSideAuto extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
+      drive.trajectorySequenceBuilder(startPose);
         drive.followTrajectory(drive.trajectoryBuilder(startPose)
-                .lineToConstantHeading(new Vector2d(-20, -60))
-                .lineToLinearHeading(new Pose2d(-8, -32, Math.toRadians(225)))
+                .splineTo(new Vector2d(-8, -37), Math.toRadians(225))
+               .lineToLinearHeading(new Pose2d(-8,-36, Math.toRadians(225)))
                 .back(4)
-                .forward(4)
-                .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(0)))
-                .back(4)
-                .forward(4)
-                .lineToLinearHeading(new Pose2d(-8, -32, Math.toRadians(225)))
-                .back(4)
-                .forward(4)
-                .lineToLinearHeading(new Pose2d(-24,-36, Math.toRadians(0)))
-                .forward(10)
+               .forward(4)
                 .build()
         );
     }
