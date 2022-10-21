@@ -34,10 +34,10 @@ public class TeleOPMain extends CommandOpMode {
 
         CommandSchedulerWrapper command = new CommandSchedulerWrapper();
 
-        HardwareSubsystem hardware = new HardwareSubsystem(this);
         MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
-        LiftSubsystem lift = new LiftSubsystem();
-        GripperSubsystem trapdoor = new GripperSubsystem();
+
+        LiftSubsystem lift = new LiftSubsystem(this);
+        GripperSubsystem trapdoor = new GripperSubsystem(this);
 
 
         TelemetrySubsystem telemetrySubsystem = new TelemetrySubsystem(

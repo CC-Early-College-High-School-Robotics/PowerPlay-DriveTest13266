@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.constants.Constants.LiftServoConsta
 
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,7 +18,8 @@ public class LiftSubsystem extends HardwareSubsystem {
     double motorPosition;
     double servoPosition;
 
-    public LiftSubsystem() {
+    public LiftSubsystem(OpMode opMode) {
+        super(opMode);
         leftLiftMotor = hardwareMap.get(DcMotorEx.class, LiftMotorConstants.hardware.LEFT_ID);
         leftLiftMotor.setDirection(LiftMotorConstants.hardware.LEFT_REVERSED ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         leftLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -41,6 +43,7 @@ public class LiftSubsystem extends HardwareSubsystem {
         rightLiftServo.setInverted(LiftServoConstants.hardware.RIGHT_REVERSED);
         initial();
     }
+
 
     public void high() {
         motorPosition = LiftMotorConstants.position.TALL;
@@ -157,6 +160,12 @@ public class LiftSubsystem extends HardwareSubsystem {
         leftLiftMotor.setPower(LiftMotorConstants.speed.INITIAL_SPEED);
         rightLiftMotor.setPower(LiftMotorConstants.speed.INITIAL_SPEED);
     }
+
+    @Override
+    public void init() {
+
+    }
+
 
     @Override
     public void periodic() {

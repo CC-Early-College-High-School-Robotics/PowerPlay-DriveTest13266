@@ -96,18 +96,16 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
 
 
 
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+    private final TrajectorySequenceRunner trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
-    private TrajectoryFollower follower;
+    private final MotorExEx leftFront, leftRear, rightRear, rightFront;
+    private final List<MotorExEx> motors;
 
-    private MotorExEx leftFront, leftRear, rightRear, rightFront;
-    private List<MotorExEx> motors;
-
-    private BNO055IMU imu;
-    private VoltageSensor batteryVoltageSensor;
+    private final BNO055IMU imu;
+    private final VoltageSensor batteryVoltageSensor;
 
     private final LinearOpMode opMode;
 
@@ -119,11 +117,12 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
     public MecanumDriveSubsystem(LinearOpMode opMode) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         this.opMode = opMode;
+        HardwareSubsystem.initializeConstants();
 
         CommandScheduler.getInstance().registerSubsystem(this);
 
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
+        TrajectoryFollower follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 INITIAL_POS_MAYBE, TIMEOUT);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(opMode.hardwareMap);
