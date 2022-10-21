@@ -1,7 +1,14 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
+
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.RUN_USING_BUILT_IN_CONTROLLER;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.kA;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.kStatic;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.kV;
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.manualFeedforwardTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.kinematics.Kinematics;
@@ -13,16 +20,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 import java.util.Objects;
-
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -39,14 +39,14 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  * user to reset the position of the bot in the event that it drifts off the path.
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
-@Config
+//@Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+//    public double DISTANCE = 72; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private SampleMecanumDrive drive;
+    private MecanumDriveSubsystem drive;
 
     enum Mode {
         DRIVER_MODE,
@@ -55,22 +55,22 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     private Mode mode;
 
-    private static MotionProfile generateProfile(boolean movingForward) {
-        MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
-        MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
+    private MotionProfile generateProfile(boolean movingForward) {
+        MotionState start = new MotionState(movingForward ? 0 : manualFeedforwardTuner.DISTANCE, 0, 0, 0);
+        MotionState goal = new MotionState(movingForward ? manualFeedforwardTuner.DISTANCE : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (RUN_USING_ENCODER) {
+        if (RUN_USING_BUILT_IN_CONTROLLER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MecanumDriveSubsystem(this);
 
         mode = Mode.TUNING_MODE;
 

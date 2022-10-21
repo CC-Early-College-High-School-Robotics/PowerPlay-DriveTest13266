@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
 
-import com.acmerobotics.dashboard.config.Config;
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.trackingWheelLateralDistanceTuner;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.constants.localizer.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
@@ -61,14 +63,15 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  * slightly but your heading will still be fine. This does not affect your overall tracking
  * precision. The heading should still line up.
  */
-@Config
+//@Config
+@Disabled
 @TeleOp(group = "drive")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
-    public static int NUM_TURNS = 10;
+//    public static int NUM_TURNS = 10;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
@@ -121,7 +124,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
         telemetry.clearAll();
         telemetry.addLine("Localizer's total heading: " + Math.toDegrees(headingAccumulator) + "°");
         telemetry.addLine("Effective LATERAL_DISTANCE: " +
-                (headingAccumulator / (NUM_TURNS * Math.PI * 2)) * StandardTrackingWheelLocalizer.LATERAL_DISTANCE);
+                (headingAccumulator / (trackingWheelLateralDistanceTuner.NUM_TURNS * Math.PI * 2)) * StandardTrackingWheelLocalizer.LATERAL_DISTANCE);
 
         telemetry.update();
 

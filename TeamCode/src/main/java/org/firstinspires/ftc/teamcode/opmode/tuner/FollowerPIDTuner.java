@@ -1,11 +1,12 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
 
-import com.acmerobotics.dashboard.config.Config;
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.followerPIDTuner;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 /*
@@ -21,16 +22,16 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
  * If you are using SampleTankDrive, you should be tuning AXIAL_PID, CROSS_TRACK_PID, and HEADING_PID.
  * These coefficients can be tuned live in dashboard.
  */
-@Config
+//@Config
 @Autonomous(group = "drive")
 public class FollowerPIDTuner extends LinearOpMode {
-    public static double DISTANCE = 48; // in
+//    public static double DISTANCE = 48; // in
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
-        Pose2d startPose = new Pose2d(-DISTANCE / 2, -DISTANCE / 2, 0);
+        Pose2d startPose = new Pose2d(-followerPIDTuner.DISTANCE / 2, -followerPIDTuner.DISTANCE / 2, 0);
 
         drive.setPoseEstimate(startPose);
 
@@ -40,13 +41,13 @@ public class FollowerPIDTuner extends LinearOpMode {
 
         while (!isStopRequested()) {
             TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                    .forward(DISTANCE)
+                    .forward(followerPIDTuner.DISTANCE)
                     .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
+                    .forward(followerPIDTuner.DISTANCE)
                     .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
+                    .forward(followerPIDTuner.DISTANCE)
                     .turn(Math.toRadians(90))
-                    .forward(DISTANCE)
+                    .forward(followerPIDTuner.DISTANCE)
                     .turn(Math.toRadians(90))
                     .build();
             drive.followTrajectorySequence(trajSeq);

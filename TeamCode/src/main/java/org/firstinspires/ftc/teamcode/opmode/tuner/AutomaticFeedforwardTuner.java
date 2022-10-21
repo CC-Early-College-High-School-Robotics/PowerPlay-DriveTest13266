@@ -1,25 +1,26 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
+
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.RUN_USING_BUILT_IN_CONTROLLER;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Drivetrain.Value.MAX_RPM;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.rpmToVelocity;
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.automaticFeedforwardTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.LoggingUtil;
 import org.firstinspires.ftc.teamcode.util.RegressionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.rpmToVelocity;
 
 /*
  * Op mode for computing kV, kStatic, and kA from various drive routines. For the curious, here's an
@@ -31,22 +32,23 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.rpmToVelocity;
  *   4. Adjust the encoder data based on the velocity tuning data and find kA with another linear
  *      regression.
  */
-@Config
+//@Config
+@Disabled
 @Autonomous(group = "drive")
 public class AutomaticFeedforwardTuner extends LinearOpMode {
-    public static double MAX_POWER = 0.7;
-    public static double DISTANCE = 100; // in
+//    public static double MAX_POWER = 0.7;
+//    public static double DISTANCE = 100; // in
 
     @Override
     public void runOpMode() throws InterruptedException {
-        if (RUN_USING_ENCODER) {
+        if (RUN_USING_BUILT_IN_CONTROLLER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
         NanoClock clock = NanoClock.system();
 
@@ -81,7 +83,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         telemetry.clearAll();
         telemetry.addLine(Misc.formatInvariant(
-                "Place your robot on the field with at least %.2f in of room in front", DISTANCE));
+                "Place your robot on the field with at least %.2f in of room in front", automaticFeedforwardTuner.DISTANCE));
         telemetry.addLine("Press (Y/Δ) to begin");
         telemetry.update();
 
@@ -97,9 +99,9 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
         telemetry.update();
 
         double maxVel = rpmToVelocity(MAX_RPM);
-        double finalVel = MAX_POWER * maxVel;
-        double accel = (finalVel * finalVel) / (2.0 * DISTANCE);
-        double rampTime = Math.sqrt(2.0 * DISTANCE / accel);
+        double finalVel = automaticFeedforwardTuner.MAX_POWER * maxVel;
+        double accel = (finalVel * finalVel) / (2.0 * automaticFeedforwardTuner.DISTANCE);
+        double rampTime = Math.sqrt(2.0 * automaticFeedforwardTuner.DISTANCE / accel);
 
         List<Double> timeSamples = new ArrayList<>();
         List<Double> positionSamples = new ArrayList<>();
@@ -177,14 +179,14 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
             telemetry.addLine("Running...");
             telemetry.update();
 
-            double maxPowerTime = DISTANCE / maxVel;
+            double maxPowerTime = automaticFeedforwardTuner.DISTANCE / maxVel;
 
             timeSamples.clear();
             positionSamples.clear();
             powerSamples.clear();
 
             drive.setPoseEstimate(new Pose2d());
-            drive.setDrivePower(new Pose2d(MAX_POWER, 0.0, 0.0));
+            drive.setDrivePower(new Pose2d(automaticFeedforwardTuner.MAX_POWER, 0.0, 0.0));
 
             startTime = clock.seconds();
             while (!isStopRequested()) {
@@ -195,7 +197,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
                 timeSamples.add(elapsedTime);
                 positionSamples.add(drive.getPoseEstimate().getX());
-                powerSamples.add(MAX_POWER);
+                powerSamples.add(automaticFeedforwardTuner.MAX_POWER);
 
                 drive.updatePoseEstimate();
             }

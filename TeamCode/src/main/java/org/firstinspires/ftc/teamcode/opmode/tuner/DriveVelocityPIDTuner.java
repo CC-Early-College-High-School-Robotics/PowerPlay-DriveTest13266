@@ -1,27 +1,28 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
+
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.RUN_USING_BUILT_IN_CONTROLLER;
+import static org.firstinspires.ftc.teamcode.constants.DriveConstants.Controller.kV;
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.driveVelocityPIDTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 import java.util.List;
-
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
@@ -47,10 +48,11 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  * user to reset the position of the bot in the event that it drifts off the path.
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
-@Config
+//@Config
+@Disabled
 @Autonomous(group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+//    public static double DISTANCE = 72; // in
 
     enum Mode {
         DRIVER_MODE,
@@ -58,21 +60,21 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
     }
 
     private static MotionProfile generateProfile(boolean movingForward) {
-        MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
-        MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
+        MotionState start = new MotionState(movingForward ? 0 : driveVelocityPIDTuner.DISTANCE, 0, 0, 0);
+        MotionState goal = new MotionState(movingForward ? driveVelocityPIDTuner.DISTANCE : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (!RUN_USING_ENCODER) {
+        if (!RUN_USING_BUILT_IN_CONTROLLER) {
             RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +
                     "PID is not in use", getClass().getSimpleName());
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
         Mode mode = Mode.TUNING_MODE;
 
@@ -81,7 +83,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         double lastKd = MOTOR_VELO_PID.d;
         double lastKf = MOTOR_VELO_PID.f;
 
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+        drive.setPIDFCoefficients(Motor.RunMode.VelocityControl, MOTOR_VELO_PID);
 
         NanoClock clock = NanoClock.system();
 
@@ -105,7 +107,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                 case TUNING_MODE:
                     if (gamepad1.y) {
                         mode = Mode.DRIVER_MODE;
-                        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        drive.setMode(Motor.RunMode.RawPower);
                     }
 
                     // calculate and set the motor power
@@ -136,7 +138,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {
-                        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        drive.setMode(Motor.RunMode.VelocityControl);
 
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
@@ -156,7 +158,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
             if (lastKp != MOTOR_VELO_PID.p || lastKd != MOTOR_VELO_PID.d
                     || lastKi != MOTOR_VELO_PID.i || lastKf != MOTOR_VELO_PID.f) {
-                drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+                drive.setPIDFCoefficients(Motor.RunMode.VelocityControl, MOTOR_VELO_PID);
 
                 lastKp = MOTOR_VELO_PID.p;
                 lastKi = MOTOR_VELO_PID.i;

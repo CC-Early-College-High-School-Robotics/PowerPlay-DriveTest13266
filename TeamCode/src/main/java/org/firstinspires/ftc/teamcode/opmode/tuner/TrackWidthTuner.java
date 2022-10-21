@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
+
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.trackWidthTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
@@ -10,8 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.constants.DriveConstants;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 /*
  * This routine determines the effective track width. The procedure works by executing a point turn
@@ -22,18 +23,18 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  * this procedure a few times and averages the values for additional accuracy. Note: a relatively
  * accurate track width estimate is important or else the angular constraints will be thrown off.
  */
-@Config
+//@Config
 @Autonomous(group = "drive")
 public class TrackWidthTuner extends LinearOpMode {
-    public static double ANGLE = 180; // deg
-    public static int NUM_TRIALS = 5;
-    public static int DELAY = 1000; // ms
+//    public static double ANGLE = 180; // deg
+//    public static int NUM_TRIALS = 5;
+//    public static int DELAY = 1000; // ms
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
         // TODO: if you haven't already, set the localizer to something that doesn't depend on
         // drive encoders for computing the heading
 
@@ -49,35 +50,35 @@ public class TrackWidthTuner extends LinearOpMode {
         telemetry.addLine("Running...");
         telemetry.update();
 
-        MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
-        for (int i = 0; i < NUM_TRIALS; i++) {
+        MovingStatistics trackWidthStats = new MovingStatistics(trackWidthTuner.NUM_TRIALS);
+        for (int i = 0; i < trackWidthTuner.NUM_TRIALS; i++) {
             drive.setPoseEstimate(new Pose2d());
 
             // it is important to handle heading wraparounds
             double headingAccumulator = 0;
             double lastHeading = 0;
 
-            drive.turnAsync(Math.toRadians(ANGLE));
+            drive.turnAsync(Math.toRadians(trackWidthTuner.ANGLE));
 
             while (!isStopRequested() && drive.isBusy()) {
                 double heading = drive.getPoseEstimate().getHeading();
-                headingAccumulator += Angle.normDelta(heading - lastHeading);
+                headingAccumulator += Angle.norm(heading - lastHeading);
                 lastHeading = heading;
 
                 drive.update();
             }
 
-            double trackWidth = DriveConstants.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
+            double trackWidth = DriveConstants.Drivetrain.Value.TRACK_WIDTH * Math.toRadians(trackWidthTuner.ANGLE) / headingAccumulator;
             trackWidthStats.add(trackWidth);
 
-            sleep(DELAY);
+            sleep(trackWidthTuner.DELAY);
         }
 
         telemetry.clearAll();
         telemetry.addLine("Tuning complete");
         telemetry.addLine(Misc.formatInvariant("Effective track width = %.2f (SE = %.3f)",
                 trackWidthStats.getMean(),
-                trackWidthStats.getStandardDeviation() / Math.sqrt(NUM_TRIALS)));
+                trackWidthStats.getStandardDeviation() / Math.sqrt(trackWidthTuner.NUM_TRIALS)));
         telemetry.update();
 
         while (!isStopRequested()) {

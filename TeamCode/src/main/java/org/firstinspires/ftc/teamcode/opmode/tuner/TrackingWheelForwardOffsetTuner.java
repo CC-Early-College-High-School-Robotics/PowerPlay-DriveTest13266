@@ -1,18 +1,21 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.opmode.tuner;
+
+
+import static org.firstinspires.ftc.teamcode.constants.RoadrunnerTuning.trackingWheelForwardOffsetTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.constants.localizer.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 /**
  * This routine determines the effective forward offset for the lateral tracking wheel.
@@ -33,18 +36,19 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  * for the forward offset. You can run this procedure as many times as necessary until a
  * satisfactory result is produced.
  */
-@Config
+//@Config
+@Disabled
 @Autonomous(group="drive")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
-    public static double ANGLE = 180; // deg
-    public static int NUM_TRIALS = 5;
-    public static int DELAY = 1000; // ms
+//    public static double ANGLE = 180; // deg
+//    public static int NUM_TRIALS = 5;
+//    public static int DELAY = 1000; // ms
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
@@ -64,15 +68,15 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
         telemetry.addLine("Running...");
         telemetry.update();
 
-        MovingStatistics forwardOffsetStats = new MovingStatistics(NUM_TRIALS);
-        for (int i = 0; i < NUM_TRIALS; i++) {
+        MovingStatistics forwardOffsetStats = new MovingStatistics(trackingWheelForwardOffsetTuner.NUM_TRIALS);
+        for (int i = 0; i < trackingWheelForwardOffsetTuner.NUM_TRIALS; i++) {
             drive.setPoseEstimate(new Pose2d());
 
             // it is important to handle heading wraparounds
             double headingAccumulator = 0;
             double lastHeading = 0;
 
-            drive.turnAsync(Math.toRadians(ANGLE));
+            drive.turnAsync(Math.toRadians(trackingWheelForwardOffsetTuner.ANGLE));
 
             while (!isStopRequested() && drive.isBusy()) {
                 double heading = drive.getPoseEstimate().getHeading();
@@ -86,14 +90,14 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
                     drive.getPoseEstimate().getY() / headingAccumulator;
             forwardOffsetStats.add(forwardOffset);
 
-            sleep(DELAY);
+            sleep(trackingWheelForwardOffsetTuner.DELAY);
         }
 
         telemetry.clearAll();
         telemetry.addLine("Tuning complete");
         telemetry.addLine(Misc.formatInvariant("Effective forward offset = %.2f (SE = %.3f)",
                 forwardOffsetStats.getMean(),
-                forwardOffsetStats.getStandardDeviation() / Math.sqrt(NUM_TRIALS)));
+                forwardOffsetStats.getStandardDeviation() / Math.sqrt(trackingWheelForwardOffsetTuner.NUM_TRIALS)));
         telemetry.update();
 
         while (!isStopRequested()) {
