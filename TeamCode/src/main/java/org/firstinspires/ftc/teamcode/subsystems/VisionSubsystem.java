@@ -23,18 +23,18 @@ public class VisionSubsystem extends HardwareSubsystem {
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
-    private final double fx = 578.272;
-    private final double fy = 578.272;
-    private final double cx = 402.145;
-    private final double cy = 221.506;
+    private static final double fx = 578.272;
+    private static final double fy = 578.272;
+    private static final double cx = 402.145;
+    private static final double cy = 221.506;
 
     // UNITS ARE METERS
-    private final double tagSize = 0.166;
+    private static final double tagSize = 0.166;
 
     // Tag ID 1.2.3 from the 36h11 family
-    private final int LEFT = 1;
-    private final int MIDDLE = 2;
-    private final int RIGHT = 3;
+    private static final int LEFT = 1;
+    private static final int MIDDLE = 2;
+    private static final int RIGHT = 3;
 
 
 
