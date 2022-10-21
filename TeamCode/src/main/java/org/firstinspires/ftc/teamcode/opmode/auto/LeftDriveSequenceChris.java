@@ -16,10 +16,9 @@ public class LeftDriveSequenceChris extends LinearOpMode {
     Pose2d startPose = new Pose2d(-35, -62, Math.toRadians(-90));
     @Override
     public void runOpMode() throws InterruptedException {
-        HardwareSubsystem hardware = new HardwareSubsystem(this);
         MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
-        LiftSubsystem lift = new LiftSubsystem();
-        GripperSubsystem claw = new GripperSubsystem();
+        LiftSubsystem lift = new LiftSubsystem(this);
+        GripperSubsystem claw = new GripperSubsystem(this);
 
 
         Pose2d StartPose = new Pose2d(-35, -62, Math.toRadians(-90));

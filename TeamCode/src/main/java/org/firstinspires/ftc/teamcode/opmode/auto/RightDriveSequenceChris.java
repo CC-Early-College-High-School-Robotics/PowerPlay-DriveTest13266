@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.subsystems.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.pipelines.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.GripperSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.HardwareSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -23,10 +22,9 @@ public class RightDriveSequenceChris extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        HardwareSubsystem hardware = new HardwareSubsystem(this);
         MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
-        LiftSubsystem lift = new LiftSubsystem();
-        GripperSubsystem claw = new GripperSubsystem();
+        LiftSubsystem lift = new LiftSubsystem(this);
+        GripperSubsystem claw = new GripperSubsystem(this);
 
 
 
@@ -41,20 +39,20 @@ public class RightDriveSequenceChris extends LinearOpMode {
             // UNITS ARE PIXELS
             // NOTE: this calibration is for the C920 webcam at 800x448.
             // You will need to do your own calibration for other configurations!
-            double fx = 578.272;
-            double fy = 578.272;
-            double cx = 402.145;
-            double cy = 221.506;
+            final double fx = 578.272;
+            final double fy = 578.272;
+            final double cx = 402.145;
+            final double cy = 221.506;
 
             // UNITS ARE METERS
-            double tagsize = 0.166;
+            final double tagsize = 0.166; // meters
 
             // Tag ID 1.2.3 from the 36h11 family
-            int LEFT = 1;
-            int MIDDLE = 2;
-            int RIGHT = 3;
+            final int LEFT = 1;
+            final int MIDDLE = 2;
+            final int RIGHT = 3;
 
-            AprilTagDetection tagOfInterest = null;
+            final AprilTagDetection tagOfInterest = null;
 
             @Override
             public void runOpMode() {
