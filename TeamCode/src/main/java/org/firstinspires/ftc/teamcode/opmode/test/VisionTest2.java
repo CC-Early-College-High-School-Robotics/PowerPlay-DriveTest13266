@@ -16,6 +16,7 @@ public class VisionTest2  extends LinearOpMode {
         {
            vision.updateTagOfInterest();
            vision.printTagData();
+           telemetry.update();
         }
         switch (vision.getTagOfInterest().id) {
             case 1: {
