@@ -16,21 +16,20 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.constants.DriveConstants;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.CommandSchedulerWrapper;
-import org.firstinspires.ftc.teamcode.subsystems.HardwareSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TelemetrySubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GripperSubsystem;
-import org.firstinspires.ftc.teamcode.util.GamepadExEx;
 
 @TeleOp(name = "Main TeleOP")
 public class TeleOPMain extends CommandOpMode {
     @Override
     public void initialize() {
         // TODO: Move to Robot Container
-        GamepadExEx driver = new GamepadExEx(gamepad1);
-        GamepadExEx operator = new GamepadExEx(gamepad2);
+        BetterGamepad driver = new BetterGamepad(gamepad1);
+        BetterGamepad operator = new BetterGamepad(gamepad2);
 
         CommandSchedulerWrapper command = new CommandSchedulerWrapper();
 
