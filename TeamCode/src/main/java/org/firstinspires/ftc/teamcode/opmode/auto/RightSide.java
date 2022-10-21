@@ -38,22 +38,22 @@ public class RightSide extends LinearOpMode {
            vision.updateTagOfInterest();
            vision.printTagData();
            telemetry.update();
+           if (vision.getTagOfInterest() == null) continue;
+           switch (vision.getTagOfInterest().id) {
+               case 2: {
+                   forwardDistance = 24;
+                   break;
+               }
+               case 3: {
+                   forwardDistance = 48;
+                   break;
+               }
+               default: {
+                   forwardDistance = 0;
+               }
+           }
         }
-
-
-        switch (vision.getTagOfInterest().id) {
-            case 2: {
-                forwardDistance = 24;
-                break;
-            }
-            case 3: {
-                forwardDistance = 48;
-                break;
-            }
-            default: {
-                forwardDistance = 0;
-            }
-        }
+        waitForStart();
 
         TrajectorySequence preLoad = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60), slowVel, slowAccel)
@@ -62,8 +62,6 @@ public class RightSide extends LinearOpMode {
                 .setReversed(false)
                 .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(0)), slowVel, slowAccel)
                 .build();
-
-        waitForStart();
 
         TrajectorySequence forward = drive.trajectorySequenceBuilder(preLoad.end())
                 .forward(forwardDistance, slowVel, slowAccel)
