@@ -12,6 +12,10 @@ public abstract class HardwareSubsystem extends SubsystemBase {
     public HardwareSubsystem(OpMode opMode) {
         telemetry = opMode.telemetry;
         hardwareMap = opMode.hardwareMap;
+        initializeConstants();
+    }
+    public static void initializeConstants() {
+
     }
     public abstract void init();
     public abstract void periodic();
