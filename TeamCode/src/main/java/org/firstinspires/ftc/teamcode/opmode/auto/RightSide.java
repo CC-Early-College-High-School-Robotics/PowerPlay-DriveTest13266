@@ -34,8 +34,13 @@ public class RightSide extends LinearOpMode {
         GripperSubsystem gripper = new GripperSubsystem(this);
 
         telemetry.setMsTransmissionInterval(50);
-        vision.init();
         drive.setPoseEstimate(startPose);
+        lift.initial();
+        gripper.close();
+
+        vision.init();
+
+
 
         while (!isStarted() && !isStopRequested())
         {
