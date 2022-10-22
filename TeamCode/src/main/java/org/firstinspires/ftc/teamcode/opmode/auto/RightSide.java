@@ -8,6 +8,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.subsystems.GripperSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -28,6 +30,8 @@ public class RightSide extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
         VisionSubsystem vision = new VisionSubsystem(this);
+        LiftSubsystem lift = new LiftSubsystem(this);
+        GripperSubsystem gripper = new GripperSubsystem(this);
 
         telemetry.setMsTransmissionInterval(50);
         vision.init();
@@ -58,14 +62,19 @@ public class RightSide extends LinearOpMode {
         TrajectorySequence preLoad = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60), slowVel, slowAccel)
                 .splineToConstantHeading(new Vector2d(13, -47), Math.toRadians(90), slowVel, slowAccel)
+                .run(lift::high)
                 .splineTo(new Vector2d(8, -32), Math.toRadians(135), slowVel, slowAccel)
-                .setReversed(false)
+                .build();
+        TrajectorySequence boxOne = drive.trajectorySequenceBuilder(preLoad.end())
                 .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(0)), slowVel, slowAccel)
                 .build();
         if (isStopRequested()) return;
         drive.followTrajectorySequence(preLoad);
+        gripper.open();
+        drive.followTrajectorySequence(boxOne);
+        lift.initial();
         if (forwardDistance == 0) return;
-        TrajectorySequence forward = drive.trajectorySequenceBuilder(preLoad.end())
+        TrajectorySequence forward = drive.trajectorySequenceBuilder(boxOne.end())
                 .forward(forwardDistance, slowVel, slowAccel)
                 .build();
         drive.followTrajectorySequence(forward);
