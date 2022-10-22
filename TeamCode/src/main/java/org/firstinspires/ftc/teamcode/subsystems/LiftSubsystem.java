@@ -77,7 +77,7 @@ public class LiftSubsystem extends HardwareSubsystem {
                     HIGH          = 209, // Degrees
                     MID           = 209, // Degrees
                     LOW           = 142, // Degrees
-                    INITIAL = 10,
+                    INITIAL = 15,
                     RIGHT_SERVO_OFFSET = 0;
         }
         public static class Speed {
