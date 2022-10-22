@@ -62,14 +62,12 @@ public class RightSide extends LinearOpMode {
                 .setReversed(false)
                 .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(0)), slowVel, slowAccel)
                 .build();
-
-        TrajectorySequence forward = drive.trajectorySequenceBuilder(preLoad.end())
-                .forward(forwardDistance, slowVel, slowAccel)
-                .build();
-
         if (isStopRequested()) return;
         drive.followTrajectorySequence(preLoad);
         if (forwardDistance == 0) return;
-        drive.followTrajectorySequence(forward);
+        drive.followTrajectorySequence(
+                drive.trajectorySequenceBuilder(preLoad.end())
+                .forward(forwardDistance, slowVel, slowAccel)
+                .build());
     }
 }
