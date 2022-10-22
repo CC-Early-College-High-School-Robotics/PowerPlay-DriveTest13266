@@ -65,9 +65,9 @@ public class RightSide extends LinearOpMode {
         if (isStopRequested()) return;
         drive.followTrajectorySequence(preLoad);
         if (forwardDistance == 0) return;
-        drive.followTrajectorySequence(
-                drive.trajectorySequenceBuilder(preLoad.end())
+        TrajectorySequence forward = drive.trajectorySequenceBuilder(preLoad.end())
                 .forward(forwardDistance, slowVel, slowAccel)
-                .build());
+                .build();
+        drive.followTrajectorySequence(forward);
     }
 }
