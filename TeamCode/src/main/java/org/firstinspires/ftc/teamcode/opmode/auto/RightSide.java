@@ -66,8 +66,8 @@ public class RightSide extends LinearOpMode {
         TrajectorySequence preLoad = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60), slowVel, slowAccel)
                 .run(lift::high)
-                .splineToConstantHeading(new Vector2d(10, -47), Math.toRadians(-90), slowVel, slowAccel)
-                .splineTo(new Vector2d(4, -29), Math.toRadians(-120), slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(10, -47), Math.toRadians(90), slowVel, slowAccel)
+                .splineTo(new Vector2d(4, -29), Math.toRadians(120), slowVel, slowAccel)
                 .build();
         TrajectorySequence boxOne = drive.trajectorySequenceBuilder(preLoad.end())
                 .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(180)), slowVel, slowAccel)
