@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -22,9 +21,9 @@ public class RightSide extends LinearOpMode {
     TrajectoryVelocityConstraint slowVel = (v, pose2d, pose2d1, pose2d2) -> 15; // value
     TrajectoryAccelerationConstraint slowAccel = (v, pose2d, pose2d1, pose2d2) -> 15; // value
 
-    Pose2d startPose = new Pose2d(31, -62, Math.toRadians(-90));
+    Pose2d startPose = new Pose2d(31, -62, Math.toRadians(90));
 
-    double forwardDistance;
+    double backDistance;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,15 +49,15 @@ public class RightSide extends LinearOpMode {
            if (vision.getTagOfInterest() == null) continue;
            switch (vision.getTagOfInterest().id) {
                case 2: {
-                   forwardDistance = 24;
+                   backDistance = 25;
                    break;
                }
                case 3: {
-                   forwardDistance = 48;
+                   backDistance = 48;
                    break;
                }
                default: {
-                   forwardDistance = 0;
+                   backDistance = 0;
                }
            }
         }
@@ -67,21 +66,22 @@ public class RightSide extends LinearOpMode {
         TrajectorySequence preLoad = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(20, -60), slowVel, slowAccel)
                 .run(lift::high)
-                .splineToConstantHeading(new Vector2d(10, -47), Math.toRadians(90), slowVel, slowAccel)
-                .splineTo(new Vector2d(4, -29), Math.toRadians(120), slowVel, slowAccel)
+                .splineToConstantHeading(new Vector2d(10, -47), Math.toRadians(-90), slowVel, slowAccel)
+                .splineTo(new Vector2d(4, -29), Math.toRadians(-120), slowVel, slowAccel)
                 .build();
         TrajectorySequence boxOne = drive.trajectorySequenceBuilder(preLoad.end())
-                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(0)), slowVel, slowAccel)
+                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(180)), slowVel, slowAccel)
                 .build();
         if (isStopRequested()) return;
         drive.followTrajectorySequence(preLoad);
         gripper.open();
         drive.followTrajectorySequence(boxOne);
         lift.initial();
-        if (forwardDistance == 0) return;
+        if (backDistance == 0) return;
         TrajectorySequence forward = drive.trajectorySequenceBuilder(boxOne.end())
-                .forward(forwardDistance, slowVel, slowAccel)
+                .back(backDistance, slowVel, slowAccel)
                 .build();
         drive.followTrajectorySequence(forward);
+        sleep(5000);
     }
 }

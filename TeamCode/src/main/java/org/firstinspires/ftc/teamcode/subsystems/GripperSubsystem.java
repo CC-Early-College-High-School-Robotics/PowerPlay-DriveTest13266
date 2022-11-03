@@ -20,7 +20,7 @@ public class GripperSubsystem extends HardwareSubsystem {
             public boolean REVERSED = true;
         }
         public static class Value {
-            public double OPEN                       = 9; // Degrees
+            public double OPEN                       = 3; // Degrees
             public double CLOSE                      = 90; // Degrees
         }
     }

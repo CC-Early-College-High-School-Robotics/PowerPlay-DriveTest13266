@@ -88,10 +88,10 @@ public class TeleOPMain extends CommandOpMode {
         command.add(() -> operator.get(DPAD_RIGHT))
                 .whenPressed(lift::low);
 
-        command.add(() -> operator.get(A))
+        command.add(() -> operator.get(B))
                 .whenPressed(trapdoor::open);
 
-        command.add(() -> operator.get(B))
+        command.add(() -> operator.get(A))
                 .whenPressed(trapdoor::close);
 
         command.add(() -> operator.getLeftY() > 0.3)
