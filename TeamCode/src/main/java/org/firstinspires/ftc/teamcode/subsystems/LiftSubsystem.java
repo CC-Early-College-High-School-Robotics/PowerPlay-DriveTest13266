@@ -74,10 +74,10 @@ public class LiftSubsystem extends HardwareSubsystem {
 
         public static class Position {
             public double
-                    HIGH          = 209, // Degrees
-                    MID           = 209, // Degrees
+                    HIGH          = 219, // Degrees
+                    MID           = 219, // Degrees
                     LOW           = 142, // Degrees
-                    INITIAL = 15,
+                    INITIAL = 6,
                     RIGHT_SERVO_OFFSET = 0;
         }
         public static class Speed {

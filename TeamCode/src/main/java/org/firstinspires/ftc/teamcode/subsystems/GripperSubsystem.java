@@ -21,7 +21,7 @@ public class GripperSubsystem extends HardwareSubsystem {
         }
         public static class Value {
             public double OPEN                       = 3; // Degrees
-            public double CLOSE                      = 90; // Degrees
+            public double CLOSE                      = 100; // Degrees
         }
     }
 
