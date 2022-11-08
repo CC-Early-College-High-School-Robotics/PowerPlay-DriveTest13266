@@ -161,7 +161,7 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-         BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+//         BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = new MotorExEx(opMode.hardwareMap, DriveConstants.Drivetrain.LeftFront.hardware.ID, DriveConstants.Drivetrain.Value.TICKS_PER_REV, DriveConstants.Drivetrain.Value.MAX_RPM);
         leftRear = new MotorExEx(opMode.hardwareMap, DriveConstants.Drivetrain.LeftRear.hardware.ID, DriveConstants.Drivetrain.Value.TICKS_PER_REV, DriveConstants.Drivetrain.Value.MAX_RPM);
@@ -374,12 +374,7 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        // To work around an SDK bug, use -zRotationRate in place of xRotationRate
-        // and -xRotationRate in place of zRotationRate (yRotationRate behaves as
-        // expected). This bug does NOT affect orientation.
-        //
-        // See https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/251 for details.
-        return (double) -imu.getAngularVelocity().zRotationRate;
+        return (double) imu.getAngularVelocity().xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
