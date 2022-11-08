@@ -13,6 +13,7 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.RIGHT_TRIGGER;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.constants.DriveConstants;
@@ -22,6 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TelemetrySubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GripperSubsystem;
+
+import java.util.function.BooleanSupplier;
 
 @TeleOp(name = "Main TeleOP")
 public class TeleOPMain extends CommandOpMode {
@@ -105,17 +108,11 @@ public class TeleOPMain extends CommandOpMode {
 
         command.add(() -> operator.getRightY() < -0.3)
                 .whileHeld(lift::decreaseServoPosition);
-
-        waitForStart();
-
-        while (opModeIsActive()) {
-            // There are two things that get run when you do this.
-            // The periodic method of all defined subsystems, and
-            // the runnable used on the all of the buttons.
-            // This runnable will be active based on the get function of
-            // the trigger which is why you have to override the get
-            // method of Button to be able to use it
-            CommandScheduler.getInstance().run();
-        }
     }
+    // There are two things that get run when you do this.
+    // The periodic method of all defined subsystems, and
+    // the runnable used on the all of the buttons.
+    // This runnable will be active based on the get function of
+    // the trigger which is why you have to override the get
+    // method of Button to be able to use it
 }
