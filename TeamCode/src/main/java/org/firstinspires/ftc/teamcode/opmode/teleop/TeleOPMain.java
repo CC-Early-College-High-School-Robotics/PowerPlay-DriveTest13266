@@ -38,6 +38,7 @@ public class TeleOPMain extends CommandOpMode {
          *
          */
 
+        //TODO: Fix fine control
         command.addDefault(() -> drive.drive(
                 driver.getLeftX(), driver.getLeftY(), driver.getRightX(), DriveConstants.Drivetrain.Value.FINE_CONTROL, DriveConstants.Drivetrain.Value.FIELD_CENTRIC));
 
