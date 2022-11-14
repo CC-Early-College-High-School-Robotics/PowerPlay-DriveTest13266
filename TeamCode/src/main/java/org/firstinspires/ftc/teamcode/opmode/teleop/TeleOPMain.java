@@ -1,30 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.RIGHT_TRIGGER;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.button.Trigger;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.constants.DriveConstants;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.CommandSchedulerWrapper;
-import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TelemetrySubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.GripperSubsystem;
-
-import java.util.function.BooleanSupplier;
 
 @TeleOp(name = "Main TeleOP")
 public class TeleOPMain extends CommandOpMode {
@@ -38,14 +25,10 @@ public class TeleOPMain extends CommandOpMode {
 
         MecanumDriveSubsystem drive = new MecanumDriveSubsystem(this);
 
-        LiftSubsystem lift = new LiftSubsystem(this);
-        GripperSubsystem trapdoor = new GripperSubsystem(this);
-
 
         TelemetrySubsystem telemetrySubsystem = new TelemetrySubsystem(
                 telemetry,
-                drive,
-                lift);
+                drive);
 
         command.addDefault(() -> telemetrySubsystem.periodic(driver, operator));
 
@@ -69,17 +52,17 @@ public class TeleOPMain extends CommandOpMode {
         command.add(() -> driver.get(A))
                 .whenPressed(drive::resetImu);
 
-        command.add(() -> driver.getTriggerPressed(LEFT_TRIGGER))
+/*        command.add(() -> driver.getTriggerPressed(LEFT_TRIGGER))
                 .whenPressed(trapdoor::open);
 
         command.add(() -> driver.getTriggerPressed(RIGHT_TRIGGER))
                 .whenPressed(trapdoor::close);
 
-        /*
+        *//*
          *
          * OPERATOR COMMANDS
          *
-         */
+         *//*
 
         command.add(() -> operator.get(DPAD_DOWN))
                 .whenPressed(lift::initial);
@@ -107,7 +90,7 @@ public class TeleOPMain extends CommandOpMode {
                 .whileHeld(lift::increaseServoPosition);
 
         command.add(() -> operator.getRightY() < -0.3)
-                .whileHeld(lift::decreaseServoPosition);
+                .whileHeld(lift::decreaseServoPosition);*/
     }
     // There are two things that get run when you do this.
     // The periodic method of all defined subsystems, and
