@@ -51,6 +51,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.constants.DriveConstants;
+import org.firstinspires.ftc.teamcode.constants.localizer.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
@@ -104,7 +105,7 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
     private final MotorExEx leftFront, leftRear, rightRear, rightFront;
     private final List<MotorExEx> motors;
 
-    private final BNO055IMU imu;
+//    private final BNO055IMU imu;
     private final VoltageSensor batteryVoltageSensor;
 
     private final LinearOpMode opMode;
@@ -134,12 +135,12 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = opMode.hardwareMap.get(BNO055IMU.class, ID);
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        //TODO: this will probably mess up roadrunner put it back to radians or maybe
-        // do math.toDegrees
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+//        imu = opMode.hardwareMap.get(BNO055IMU.class, ID);
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        //TODO: this will probably mess up roadrunner put it back to radians or maybe
+//        // do math.toDegrees
+//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+//        imu.initialize(parameters);
 
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
@@ -206,7 +207,7 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-//        setLocalizer(new TwoWheelTrackingLocalizer(opMode.hardwareMap, this));
+        setLocalizer(new StandardTrackingWheelLocalizer(opMode.hardwareMap));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
@@ -365,16 +366,16 @@ public class MecanumDriveSubsystem extends MecanumDrive implements Subsystem {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        return 0;
     }
 
-    public void resetImu() {
-        imu.initialize(new BNO055IMU.Parameters());
-    }
+//    public void resetImu() {
+//        imu.initialize(new BNO055IMU.Parameters());
+//    }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().xRotationRate;
+        return (double) 0;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
