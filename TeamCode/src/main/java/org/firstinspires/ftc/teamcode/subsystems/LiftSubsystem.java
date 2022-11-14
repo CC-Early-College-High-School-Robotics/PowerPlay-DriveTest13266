@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftMotorConstants;
-import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftServoConstants;
+//import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftMotorConstants;
+//import static org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem.LiftServoConstants;
 
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+@Deprecated
 public class LiftSubsystem extends HardwareSubsystem {
     DcMotorEx leftLiftMotor;
     DcMotorEx rightLiftMotor;

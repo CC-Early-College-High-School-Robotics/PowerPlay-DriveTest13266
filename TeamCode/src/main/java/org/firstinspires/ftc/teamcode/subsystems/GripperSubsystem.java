@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+@Deprecated
 public class GripperSubsystem extends HardwareSubsystem {
 
     private final ServoEx trapdoor;
