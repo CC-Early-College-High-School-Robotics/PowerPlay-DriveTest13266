@@ -50,8 +50,8 @@ public class TeleOPMain extends CommandOpMode {
                 .whenPressed(drive::setTurbo)
                 .whenReleased(drive::setNormal);
 
-        command.add(() -> driver.get(A))
-                .whenPressed(drive::resetImu);
+//        command.add(() -> driver.get(A))
+//                .whenPressed(drive::resetImu);
 
 /*        command.add(() -> driver.getTriggerPressed(LEFT_TRIGGER))
                 .whenPressed(trapdoor::open);
